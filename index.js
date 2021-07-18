@@ -37,6 +37,37 @@ app.post("/todo-list", (req, res) => {
       console.error(error);
       res.status(500).send("실패했습니다.");
     });
+
+  app.put("/todo-list", (req, res) => {
+    const { todoItem, refId, initialTime, editTime } = req.body;
+    db("todos")
+      .where({ id: req.body.id })
+      .update({
+        item: todoItem,
+        ref_id: refId,
+        inital_date: initialTime,
+        final_edit_date: editTime,
+      })
+      .then(response => {
+        res.status(200).send("리스트가 수정 되었습니다.");
+      })
+      .catch(error => {
+        console.error(error);
+        res.status(500).send("실패했습니다.");
+      });
+  });
+  app.delete("/todo-list", (req, res) => {
+    db("todos")
+      .where({ id: req.body.id })
+      .del()
+      .then(response => {
+        res.status(200).send("리스트에서 삭제 되었습니다.");
+      })
+      .catch(error => {
+        console.error(error);
+        res.status(500).send("실패했습니다.");
+      });
+  });
 });
 
 app.listen(port, () => {
