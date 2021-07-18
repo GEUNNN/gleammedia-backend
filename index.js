@@ -12,8 +12,31 @@ const db = knex({
   },
 });
 
+const cors = require("cors");
+app.use(cors());
+
+app.use(express.json());
+
 app.get("/todo-list", (req, res) => {
   db("todos").then(result => res.status(200).send({ result: result }));
+});
+
+app.post("/todo-list", (req, res) => {
+  const { todoItem, refId, initialTime, editTime } = req.body;
+  db("todos")
+    .insert({
+      item: todoItem,
+      ref_id: refId,
+      inital_date: initialTime,
+      final_edit_date: editTime,
+    })
+    .then(response => {
+      res.status(200).send("리스트에 등록 되었습니다.");
+    })
+    .catch(error => {
+      console.error(error);
+      res.status(500).send("실패했습니다.");
+    });
 });
 
 app.listen(port, () => {
